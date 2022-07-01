@@ -11,7 +11,7 @@ const Home = ({ navigation }) => {
  
   const [nickName, setNickName] = useState("Player 1")
 
-  const {dados, setDados} = useContext(NickContext)
+  const {setDados} = useContext(NickContext)
 
   
   const inciarPartida = async () => {

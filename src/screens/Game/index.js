@@ -6,12 +6,12 @@ import { styles } from "./styles";
 import { NickContext } from "../../NickContext";
 import bgImg from "../../images/fundoVerde.jpg";
 
-const Game = ({ route , navigation}) => {
+const Game = ({ route, navigation }) => {
   const { deckId } = route.params;
   const [cards, setCards] = useState(null);
   const [naipe, setNaipe] = useState(0);
-  const { dados, setDados } = useContext(NickContext);
-  const [restante, setRestante] = useState(52)
+  const { dados } = useContext(NickContext);
+  const [restante, setRestante] = useState(52);
 
   const verificar = () => {
     const ganhou =
@@ -19,18 +19,20 @@ const Game = ({ route , navigation}) => {
       cards.cards.every(
         (card) => card.suit == "CLUBS" || card.suit == "SPADES"
       );
-      
-    if (cards==null ) {
+
+    if (cards == null) {
       return;
-    }
-    else if(restante<=2){
-      alert("As cartas acabaram")
-      navigation.navigate("Home");
-    } 
-    else if (ganhou) {
+    } else if (restante <= 2) {
+      alert("As cartas acabaram");
+      setTimeout(() => {
+        navigation.navigate("Home");
+      }, 1000);
+    } else if (ganhou) {
       alert(`🏆Parabéns ${dados}, você venceu🏆`);
     } else {
-      alert("☠️ VOCÊ PERDEU ☠️                                                                     Tente novamente");
+      alert(
+        "☠️ VOCÊ PERDEU ☠️                                                                     Tente novamente"
+      );
     }
   };
 
@@ -38,8 +40,7 @@ const Game = ({ route , navigation}) => {
     const get = async () => {
       const deck = await getCards(deckId, 3);
       setCards(deck);
-      setRestante(restante-3);
-      
+      setRestante(restante - 3);
     };
     get();
 
@@ -73,14 +74,22 @@ const Game = ({ route , navigation}) => {
 
   return (
     <ImageBackground
-    source={bgImg}
-    style={styles.container}
-    imageStyle={{ resizeMode: "contain", transform: [{ scale: 2.3 }] }}
-  >
-      <View style={{ flexDirection: "row" , flex:1, alignItems:"center", justifyContent:"center"}}>
+      source={bgImg}
+      style={styles.container}
+      imageStyle={{ resizeMode: "contain", transform: [{ scale: 2.3 }] }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {cards &&
           cards.cards.map((card, index) => (
-            <Image key={index}
+            <Image
+              key={index}
               source={{ uri: card.image }}
               style={{ width: 130, height: 195, resizeMode: "contain" }}
             ></Image>
@@ -88,21 +97,18 @@ const Game = ({ route , navigation}) => {
       </View>
 
       <View>
-        <Text style={{fontSize:30, color:"white" , fontWeight:"bold"}}>
+        <Text style={{ fontSize: 30, color: "white", fontWeight: "bold" }}>
           Regras do jogo: Se as 3 cartas compradas forem da cor preta, você
           ganha!
         </Text>
       </View>
 
-      <View style={{flex:1,  justifyContent:"center", alignItems:"center"}}>
-        <TouchableOpacity
-          style={styles.comprarCartas}
-          onPress={comprarCartas}
-        >
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity style={styles.comprarCartas} onPress={comprarCartas}>
           <Text>Comprar cartas</Text>
         </TouchableOpacity>
       </View>
-      </ImageBackground>
+    </ImageBackground>
   );
 };
 
